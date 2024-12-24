@@ -1,11 +1,26 @@
-import Form from "../../components/CustomForm"
+import Form from "../../components/CustomForm";
+import type { NoteData, Tag } from "../../types";
 
-const CreatePage = () => {
+export type CreatePageProps = {
+  handleSubmit: (NoteData: NoteData) => void;
+  createTag: (tag: Tag) => void;
+  availableTags: Tag[];
+};
+
+const CreatePage = ({
+  availableTags,
+  handleSubmit,
+  createTag,
+}: CreatePageProps) => {
   return (
     <div className="conteiner py-5 m-3">
-        <h2>Yeni Not Olustur</h2>
-        <Form />
+      <h2>Yeni Not Olustur</h2>
+      <Form
+        handleSubmit={handleSubmit}
+        createTag={createTag}
+        availableTags={availableTags}
+      />
     </div>
-  )
-}
-export default CreatePage
+  );
+};
+export default CreatePage;
