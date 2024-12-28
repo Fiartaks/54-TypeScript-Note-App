@@ -1,6 +1,27 @@
-const EditPage = () => {
+import { useOutletContext } from "react-router-dom";
+import Form from "../../components/CustomForm";
+import type { Note, NoteData, Tag } from "../../types";
+
+type EditNoteProps = {
+  onSubmit: (id: string, updatedData: NoteData) => void;
+  createTag: (tag: Tag) => void;
+  availableTags: Tag[];
+};
+
+const EditPage = ({ onSubmit, createTag, availableTags }: EditNoteProps) => {
+  const found: Note = useOutletContext();
   return (
-    <div>EditPage</div>
-  )
-}
-export default EditPage
+    <div className="container py-5">
+      <h2>Note'u Düzenle</h2>
+      <Form
+        handleSubmit={(updatedNote) => onSubmit(found.id, updatedNote)}
+        availableTags={availableTags}
+        createTag={createTag}
+        title={found.title}
+        markdown={found.markdown}
+        tags={found.tags}
+      />
+    </div>
+  );
+};
+export default EditPage;

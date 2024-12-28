@@ -6,6 +6,7 @@ import EditPage from "./pages/EditPage";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Tag, type Note } from "./types";
 import { v4 } from "uuid";
+import Layout from "./components/Layout";
 
 const App = () => {
   const [notes, setNotes] = useLocalStorage<Note[]>("notes", []);
@@ -28,10 +29,32 @@ const App = () => {
     setNotes((prev) => [...prev, newNote]);
   };
 
+  //Note silme
+
+  const deleteNote = (id: string) => {
+    setNotes((prev) => prev.filter((n) => n.id !== id));
+  };
+  //Note guncelleme
+  const updateNote = (id: string, updatedData: NoteData) => {
+    const updated = notes.map((note) =>
+      note.id == id
+        ? {
+            id,
+            ...updatedData,
+          }
+        : note
+    );
+    //State guncelle
+    setNotes(updated);
+  };
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route
+          path="/"
+          element={<MainPage notes={notes} availableTags={tags} />}
+        />
         <Route
           path="/new"
           element={
@@ -43,9 +66,18 @@ const App = () => {
           }
         />
 
-        <Route path="/:id">
-          <Route index element={<DetailPage />} />
-          <Route path="edit" element={<EditPage />} />
+        <Route path="/:id" element={<Layout notes={notes} />}>
+          <Route index element={<DetailPage deleteNote={deleteNote} />} />
+          <Route
+            path="edit"
+            element={
+              <EditPage
+                createTag={createTag}
+                availableTags={tags}
+                onSubmit={updateNote}
+              />
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
